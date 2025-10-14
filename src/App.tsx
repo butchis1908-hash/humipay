@@ -16,9 +16,6 @@ export default function App() {
           <Outlet />
         </div>
       </main>
-      <footer className="border-t py-6 text-center text-sm text-gray-600 bg-white">
-        Hecho con cariño • HumiPay
-      </footer>
     </div>
   )
 }
