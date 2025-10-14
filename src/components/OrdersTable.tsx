@@ -38,9 +38,9 @@ export default function OrdersTable() {
 
   const filtered = useMemo(()=> {
     return items.filter(p => {
-      const okQ = q ? (p.nombre.toLowerCase().includes(q.toLowerCase()) || p.telefono.includes(q)) : True
-      const okPago = fPago==='all' ? True : p.medio_pago===fPago
-      const okPagado = fPagado==='all' ? True : (fPagado==='si' ? p.pagado : !p.pagado)
+      const okQ = q ? (p.nombre.toLowerCase().includes(q.toLowerCase()) || p.telefono.includes(q)) : true
+      const okPago = fPago==='all' ? true : p.medio_pago===fPago as any
+      const okPagado = fPagado==='all' ? true : (fPagado==='si' ? p.pagado : !p.pagado)
       return okQ && okPago && okPagado
     })
   }, [items, q, fPago, fPagado])
