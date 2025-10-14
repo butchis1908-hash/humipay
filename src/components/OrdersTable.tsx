@@ -56,6 +56,11 @@ export default function OrdersTable() {
     return t
   }, [filtered])
 
+  // === NUEVO: KPIs pagados vs no pagados ===
+  const paidCount = useMemo(() => filtered.filter(p => p.pagado).length, [filtered])
+  const unpaidCount = useMemo(() => Math.max(filtered.length - paidCount, 0), [filtered, paidCount])
+  const percentPaid = filtered.length ? Math.round((paidCount / filtered.length) * 100) : 0
+
   function onExport() {
     const lote = lotes.find(l => l.id===loteId)
     exportXlsx(filtered, lote ? lote.codigo : 'Lote')
@@ -64,6 +69,8 @@ export default function OrdersTable() {
   return (
     <div className="bg-white border rounded-2xl p-4 shadow-sm space-y-3">
       <h3 className="font-semibold">Pedidos</h3>
+
+      {/* Filtros y selección de lote */}
       <div className="grid md:grid-cols-4 gap-3">
         <select className="border rounded-lg px-3 py-2" value={loteId} onChange={e=>setLoteId(e.target.value)}>
           {lotes.map(l => <option key={l.id} value={l.id}>{l.codigo}</option>)}
@@ -82,11 +89,46 @@ export default function OrdersTable() {
         </select>
       </div>
 
-      <div className="flex items-center justify-between text-sm text-gray-700">
-        <div>Pedidos: <b>{totals.count}</b> • Dulce: <b>{totals.dulce}</b> • Salada: <b>{totals.salada}</b> • Total: <b>S/ {totals.monto.toFixed(2)}</b></div>
-        <button onClick={onExport} className="px-3 py-1.5 rounded-lg bg-humi-warm text-white hover:bg-humi-deep">Exportar Excel</button>
+      {/* NUEVO: KPIs y barra de progreso */}
+      <div className="grid sm:grid-cols-3 gap-3">
+        <div className="rounded-xl border p-4 bg-orange-50">
+          <div className="text-sm text-gray-600">Pedidos</div>
+          <div className="text-2xl font-bold">{totals.count}</div>
+        </div>
+        <div className="rounded-xl border p-4 bg-green-50">
+          <div className="text-sm text-gray-600">Pagados</div>
+          <div className="text-2xl font-bold">{paidCount}</div>
+        </div>
+        <div className="rounded-xl border p-4 bg-red-50">
+          <div className="text-sm text-gray-600">Pendientes de pago</div>
+          <div className="text-2xl font-bold">{unpaidCount}</div>
+        </div>
       </div>
 
+      <div className="rounded-xl border p-4">
+        <div className="flex items-center justify-between text-sm mb-2">
+          <span className="text-gray-700">Progreso de pagos</span>
+          <span className="font-medium">{percentPaid}%</span>
+        </div>
+        <div className="w-full h-3 rounded-full bg-gray-200 overflow-hidden">
+          <div
+            className="h-3 bg-green-600"
+            style={{ width: `${percentPaid}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Totales y export */}
+      <div className="flex items-center justify-between text-sm text-gray-700">
+        <div>
+          Pedidos: <b>{totals.count}</b> • Dulce: <b>{totals.dulce}</b> • Salada: <b>{totals.salada}</b> • Total: <b>S/ {totals.monto.toFixed(2)}</b>
+        </div>
+        <button onClick={onExport} className="px-3 py-1.5 rounded-lg bg-humi-warm text-white hover:bg-humi-deep">
+          Exportar Excel
+        </button>
+      </div>
+
+      {/* Tabla */}
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm">
           <thead>
@@ -126,3 +168,4 @@ export default function OrdersTable() {
     </div>
   )
 }
+
