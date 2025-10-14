@@ -20,7 +20,7 @@ export default function Admin() {
   }, [])
 
   if (checking) return <div>Cargando...</div>
-  if (!ready) return <AdminLogin onReady={() => setReady(True)} />
+  if (!ready) return <AdminLogin onReady={() => setReady(true)} />
 
   return (
     <AdminShell>
