@@ -6,6 +6,7 @@ App simple para gestionar pedidos por lotes de humitas (Netlify + Supabase).
 - Node 18+
 - Cuenta Supabase (con las tablas/seguridad del SQL que te pasé)
 - Variables de entorno en Netlify
+- cambios
 
 ## Variables
 Crea un archivo `.env` (o configúralas en Netlify):
